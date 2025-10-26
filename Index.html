@@ -1,1 +1,191 @@
-index
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Messaging App</title>
+  <style>
+    body {
+      font-family: Poppins, sans-serif;
+      background: linear-gradient(135deg, greenyellow, #b8dcff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: orange;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      width: 350px;
+      padding: 25px;
+      text-align: center;
+    }
+    h2 {
+      color: white;
+    }
+    input, textarea {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 15px;
+    }
+    button {
+      width: 95%;
+      padding: 10px;
+      background-color: green;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #468df1;
+    }
+    #app {
+      display: none;
+    }
+    .message-box {
+      background: #f5f7fa;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: left;
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="register">
+      <h2>Register</h2>
+      <input type="text" id="name" placeholder="Your name" />
+      <input type="email" id="email" placeholder="Your email" />
+      <button onclick="register()">Register</button>
+      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+
+    <div id="login" style="display:none;">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Enter your email" />
+      <button onclick="login()">Login</button>
+      <p>New here? <a href="#" onclick="showRegister()">Register</a></p>
+    </div>
+
+    <div id="app">
+      <h2>Messaging</h2>
+      <p id="userDisplay"></p>
+      <hr>
+      <h3>Send Message</h3>
+      <input type="email" id="toEmail" placeholder="Receiver Email" />
+      <textarea id="message" placeholder="Write your message..."></textarea>
+      <button onclick="sendMessage()">Send</button>
+
+      <h3>View Messages</h3>
+      <input type="email" id="fromEmail" placeholder="Sender Email" />
+      <button onclick="viewMessages()">View</button>
+      <div id="messages" class="message-box"></div>
+      <button style="background:#aaa;" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzu0o_O4l653EBlKS9qnYAunlEtQqCFPDp7mPXZp6JOOIRTbm46AS9kCqhrXj1usPD1/exec";
+
+    function showLogin() {
+      document.getElementById("register").style.display = "none";
+      document.getElementById("login").style.display = "block";
+    }
+    function showRegister() {
+      document.getElementById("register").style.display = "block";
+      document.getElementById("login").style.display = "none";
+    }
+
+    function register() {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      if (!name || !email) return alert("Fill all fields");
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: new URLSearchParams({
+          action: "register",
+          name,
+          email
+        })
+      })
+      .then(res => res.text())
+      .then(() => {
+        alert("Registered successfully!");
+        showLogin();
+      });
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value.trim();
+      if (!email) return alert("Enter your email");
+
+      localStorage.setItem("userEmail", email);
+      document.getElementById("login").style.display = "none";
+      document.getElementById("app").style.display = "block";
+      document.getElementById("userDisplay").innerText = "Logged in as: " + email;
+    }
+
+    function sendMessage() {
+      const from = localStorage.getItem("userEmail");
+      const to = document.getElementById("toEmail").value.trim();
+      const message = document.getElementById("message").value.trim();
+      if (!to || !message) return alert("Fill all fields");
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: new URLSearchParams({
+          action: "send",
+          from,
+          to,
+          message
+        })
+      })
+      .then(res => res.text())
+      .then(() => {
+        alert("Message sent!");
+        document.getElementById("message").value = "";
+      });
+    }
+
+    function viewMessages() {
+      const user = localStorage.getItem("userEmail");
+      const fromEmail = document.getElementById("fromEmail").value.trim();
+      if (!fromEmail) return alert("Enter sender email");
+
+      fetch(`${SCRIPT_URL}?action=view&to=${user}&from=${fromEmail}`)
+      .then(res => res.json())
+      .then(data => {
+        const box = document.getElementById("messages");
+        box.innerHTML = "";
+        if (data.length === 0) {
+          box.innerHTML = "<p>No messages found.</p>";
+          return;
+        }
+        data.forEach(msg => {
+          box.innerHTML += `<p><strong>${msg.from}:</strong> ${msg.message}</p>`;
+        });
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem("userEmail");
+      document.getElementById("app").style.display = "none";
+      showLogin();
+    }
+  </script>
+</body>
+</html>
