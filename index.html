@@ -1,182 +1,238 @@
-<!DOCTYPE html>
-<html lang="en">
+DOCTYPE html>
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Messaging App</title>
-  <style>
-  body {
-    font-family: "Poppins", sans-serif;
-    background: linear-gradient(135deg, #4f46e5, #9333ea);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-  .container {
-    background: #ffffff15;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-  }
-  h2 { margin-bottom: 1rem; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLEYZI Music</title>
+    <style>
+        /* ---- STYLE GLOBAL ---- */
+        body {
+            margin: 0;
+            font-family: "Poppins", Arial, sans-serif;
+            color: white;
+            background: url('https://images.unsplash.com/photo-1555617117-08a08819dc4b?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+            background-size: cover;
+        }
 
-  input, button, textarea {
-    width: 100%;
-    padding: 0.8rem;
-    margin: 0.5rem 0;
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    outline: none;
-  }
+        /* ---- OMBRE ET FOND ---- */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
 
-  input, textarea {
-    background: rgba(255, 255, 255, 0.25);
-    color: #fff;
-  }
+        header {
+            text-align: center;
+            padding: 50px 10px 30px;
+            border-bottom: 2px solid #ff3333;
+            animation: fadeInDown 1.5s ease;
+        }
 
-  /* 💡 clearer placeholder text */
-  ::placeholder {
-    color: #e2e8f0; /* soft white-grey */
-    opacity: 1;
-    font-weight: 500;
-  }
+        header h1 {
+            font-size: 3em;
+            margin: 0;
+            color: #ff3333;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px #ff3333, 0 0 30px #ff0000;
+            animation: pulse 2s infinite alternate;
+        }
 
-  button {
-    background: #6366f1;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  button:hover {
-    background: #4f46e5;
-  }
+        header p {
+            color: #ccc;
+            font-size: 1.2em;
+            margin-top: 10px;
+            animation: fadeIn 2s ease;
+        }
 
-  .hidden { display: none; }
-  .link {
-    color: #a5b4fc;
-    cursor: pointer;
-    font-size: 0.9rem;
-  }
-  #messagesList {
-    text-align: left;
-    max-height: 200px;
-    overflow-y: auto;
-  }
-</style>
+        nav {
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            padding: 15px;
+            border-bottom: 1px solid #ff3333;
+            backdrop-filter: blur(5px);
+        }
 
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff3333;
+            transform: scale(1.1);
+        }
+
+        section {
+            padding: 60px 20px;
+            text-align: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        section h2 {
+            color: #ff3333;
+            margin-bottom: 15px;
+            font-size: 2em;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #ddd;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        /* ---- MUSIQUE ---- */
+        .music-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .music-card {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            width: 260px;
+            box-shadow: 0 0 15px #000;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .music-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #ff3333;
+        }
+
+        .music-card h3 {
+            color: #ff3333;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 25px;
+            color: #888;
+            border-top: 1px solid #ff3333;
+            margin-top: 50px;
+            backdrop-filter: blur(5px);
+        }
+
+        footer a {
+            color: #ff3333;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ---- ANIMATIONS ---- */
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px #ff3333, 0 0 20px #ff0000; }
+            100% { text-shadow: 0 0 20px #ff6666, 0 0 40px #ff0000; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media screen and (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            .music-card {
+                width: 90%;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container" id="registerPage">
-  <h2>Create Account</h2>
-  <input type="text" id="regName" placeholder="Name">
-  <input type="email" id="regEmail" placeholder="Email">
-  <input type="password" id="regPassword" placeholder="Password">
-  <button onclick="register()">Register</button>
-  <p>Already have an account? <span class="link" onclick="showLogin()">Login</span></p>
-  <p id="regMsg"></p>
-</div>
+    <header>
+        <h1>🔥 BLEYZI MUSIC 🔥</h1>
+        <p>Le son de ta vie, inspiré par Dieu et la réalité 🎤</p>
+    </header>
 
-<div class="container hidden" id="loginPage">
-  <h2>Login</h2>
-  <input type="email" id="logEmail" placeholder="Email">
-  <input type="password" id="logPassword" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <p>Don't have an account? <span class="link" onclick="showRegister()">Register</span></p>
-  <p id="logMsg"></p>
-</div>
+    <nav>
+        <a href="#accueil">Accueil</a>
+        <a href="#musiques">Musiques</a>
+        <a href="#contact">Contact</a>
+    </nav>
 
-<div class="container hidden" id="chatPage">
-  <h2 id="welcomeMsg"></h2>
-  <input type="text" id="receiver" placeholder="Receiver Email">
-  <textarea id="messageText" rows="3" placeholder="Type your message..." style="width:100%;border-radius:0.5rem;padding:0.5rem;"></textarea>
-  <button onclick="sendMessage()">Send</button>
-  <button onclick="viewMessages()">📩 View My Messages</button>
-  <div id="messagesList"></div>
-  <button onclick="logout()" style="margin-top:1rem;background:#ef4444;">Logout</button>
-</div>
+    <!-- SECTION ACCUEIL -->
+    <section id="accueil">
+        <h2>Bienvenue sur BLEYZI MUSIC</h2>
+        <p>Ici, c’est l’univers BLEYZI — un mélange de foi, d’école, de vérité et de son lourd.  
+        Chaque track raconte une étape de la vie, avec la bénédiction d’en haut 💫.</p>
+    </section>
 
-<script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbw2ZvxLmlEuPgyLWRHSZpfXQzOn_n-y23z4B1KEDWzu4rKCSnwudoTmPY6Rajflsngh/exec";
+    <!-- SECTION MUSIQUES -->
+    <section id="musiques">
+        <h2>🎧 Mes Morceaux</h2>
+        <div class="music-container">
+            <div class="music-card">
+                <h3>Épreuve</h3>
+                <audio controls>
+                    <source src="musique1.mp3" type="audio/mpeg">
+                    Ton navigateur ne supporte pas la lecture audio.
+                </audio>
+            </div>
 
-  function showLogin() {
-    document.getElementById("registerPage").classList.add("hidden");
-    document.getElementById("loginPage").classList.remove("hidden");
-  }
+            <div class="music-card">
+                <h3>Foi et Force</h3>
+                <audio controls>
+                    <source src="musique2.mp3" type="audio/mpeg">
+                </audio>
+            </div>
 
-  function showRegister() {
-    document.getElementById("loginPage").classList.add("hidden");
-    document.getElementById("registerPage").classList.remove("hidden");
-  }
+            <div class="music-card">
+                <h3>École de la Vie</h3>
+                <audio controls>
+                    <source src="musique3.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+        </div>
+    </section>
 
-  function showChat(name, email) {
-    document.getElementById("loginPage").classList.add("hidden");
-    document.getElementById("registerPage").classList.add("hidden");
-    document.getElementById("chatPage").classList.remove("hidden");
-    document.getElementById("welcomeMsg").innerText = "Welcome, " + name;
-    localStorage.setItem("userEmail", email);
-  }
+    <!-- SECTION CONTACT -->
+    <section id="contact">
+        <h2>📩 Contact</h2>
+        <p>Tu veux collaborer, partager un son ou m’envoyer un message ?  
+        Écris-moi à : <strong>bleyzi.music@gmail.com</strong></p>
+    </section>
 
-  async function register() {
-    const name = document.getElementById("regName").value.trim();
-    const email = document.getElementById("regEmail").value.trim();
-    const password = document.getElementById("regPassword").value.trim();
-    const res = await fetch(scriptURL + `?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, { method: "POST" });
-    const data = await res.json();
-    document.getElementById("regMsg").innerText = data.message;
-    if (data.status === "success") showLogin();
-  }
+    <footer>
+        <p>&copy; 2025 BLEYZI Music. Tous droits réservés. | Fait avec ❤️ et passion.</p>
+    </footer>
 
-  async function login() {
-    const email = document.getElementById("logEmail").value.trim();
-    const password = document.getElementById("logPassword").value.trim();
-    const res = await fetch(scriptURL + `?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, { method: "POST" });
-    const data = await res.json();
-    document.getElementById("logMsg").innerText = data.message;
-    if (data.status === "success") showChat(data.name, data.email);
-  }
-
-  async function sendMessage() {
-    const sender = localStorage.getItem("userEmail");
-    const receiver = document.getElementById("receiver").value.trim();
-    const message = document.getElementById("messageText").value.trim();
-    if (!receiver || !message) return alert("Please enter receiver and message.");
-    const res = await fetch(scriptURL + `?action=send&sender=${encodeURIComponent(sender)}&receiver=${encodeURIComponent(receiver)}&message=${encodeURIComponent(message)}`, { method: "POST" });
-    const data = await res.json();
-    alert(data.message);
-    document.getElementById("messageText").value = "";
-  }
-
-  async function viewMessages() {
-    const email = localStorage.getItem("userEmail");
-    const res = await fetch(scriptURL + `?action=getMessages&email=${encodeURIComponent(email)}`, { method: "POST" });
-    const data = await res.json();
-    const list = document.getElementById("messagesList");
-    list.innerHTML = "";
-    if (data.messages.length === 0) {
-      list.innerHTML = "<p>No messages yet.</p>";
-    } else {
-      data.messages.forEach(m => {
-        const div = document.createElement("div");
-        div.innerHTML = `<p><strong>From:</strong> ${m[1]}<br><strong>Message:</strong> ${m[3]}</p><hr>`;
-        list.appendChild(div);
-      });
-    }
-  }
-
-  function logout() {
-    localStorage.clear();
-    document.getElementById("chatPage").classList.add("hidden");
-    showLogin();
-  }
-</script>
 </body>
 </html>
