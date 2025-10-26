@@ -22,9 +22,7 @@
       padding: 25px;
       text-align: center;
     }
-    h2 {
-      color: white;
-    }
+    h2 { color: white; }
     input, textarea {
       width: 90%;
       padding: 10px;
@@ -46,12 +44,8 @@
       transition: 0.3s;
       font-size: 16px;
     }
-    button:hover {
-      background-color: #468df1;
-    }
-    #app {
-      display: none;
-    }
+    button:hover { background-color: #468df1; }
+    #app { display: none; }
     .message-box {
       background: #f5f7fa;
       border-radius: 10px;
@@ -66,7 +60,7 @@
 <body>
   <div class="container">
     <div id="register">
-      <h2>Register</h2>
+      <h2>Register to Kalobox sms</h2>
       <input type="text" id="name" placeholder="Your name" />
       <input type="email" id="email" placeholder="Your email" />
       <button onclick="register()">Register</button>
@@ -89,16 +83,15 @@
       <textarea id="message" placeholder="Write your message..."></textarea>
       <button onclick="sendMessage()">Send</button>
 
-      <h3>View Messages</h3>
-      <input type="email" id="fromEmail" placeholder="Sender Email" />
-      <button onclick="viewMessages()">View</button>
-      <div id="messages" class="message-box"></div>
+      <h3>Inbox</h3>
+      <div id="messages" class="message-box"><p>Loading messages...</p></div>
+
       <button style="background:#aaa;" onclick="logout()">Logout</button>
     </div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzu0o_O4l653EBlKS9qnYAunlEtQqCFPDp7mPXZp6JOOIRTbm46AS9kCqhrXj1usPD1/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyuG0DiwSsbesCgDV-iBpo9uEbYLhHB0zQtojTBJChJ9N9FSt8jN3y4EtboHwPgJ9tn/exec";
 
     function showLogin() {
       document.getElementById("register").style.display = "none";
@@ -137,6 +130,8 @@
       document.getElementById("login").style.display = "none";
       document.getElementById("app").style.display = "block";
       document.getElementById("userDisplay").innerText = "Logged in as: " + email;
+      loadMessages(); // Load immediately
+      setInterval(loadMessages, 5000); // Auto refresh every 5 seconds
     }
 
     function sendMessage() {
@@ -156,28 +151,29 @@
       })
       .then(res => res.text())
       .then(() => {
-        alert("Message sent!");
         document.getElementById("message").value = "";
+        loadMessages(); // Refresh inbox
       });
     }
 
-    function viewMessages() {
+    function loadMessages() {
       const user = localStorage.getItem("userEmail");
-      const fromEmail = document.getElementById("fromEmail").value.trim();
-      if (!fromEmail) return alert("Enter sender email");
-
-      fetch(`${SCRIPT_URL}?action=view&to=${user}&from=${fromEmail}`)
+      if (!user) return;
+      fetch(`${SCRIPT_URL}?action=view&to=${user}`)
       .then(res => res.json())
       .then(data => {
         const box = document.getElementById("messages");
         box.innerHTML = "";
-        if (data.length === 0) {
-          box.innerHTML = "<p>No messages found.</p>";
+        if (!data || data.length === 0) {
+          box.innerHTML = "<p>No messages yet.</p>";
           return;
         }
         data.forEach(msg => {
           box.innerHTML += `<p><strong>${msg.from}:</strong> ${msg.message}</p>`;
         });
+      })
+      .catch(() => {
+        document.getElementById("messages").innerHTML = "<p>Error loading messages.</p>";
       });
     }
 
