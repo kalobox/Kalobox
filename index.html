@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Messaging App</title>
-<style>
+  <style>
   body {
     font-family: "Poppins", sans-serif;
     background: linear-gradient(135deg, #4f46e5, #9333ea);
@@ -16,7 +16,7 @@
     margin: 0;
   }
   .container {
-    background: #ffffff10;
+    background: #ffffff15;
     padding: 2rem;
     border-radius: 1rem;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -25,27 +25,40 @@
     text-align: center;
   }
   h2 { margin-bottom: 1rem; }
-  input, button {
+
+  input, button, textarea {
     width: 100%;
     padding: 0.8rem;
     margin: 0.5rem 0;
     border: none;
     border-radius: 0.5rem;
     font-size: 1rem;
+    outline: none;
   }
-  input {
-    background: #ffffff20;
+
+  input, textarea {
+    background: rgba(255, 255, 255, 0.25);
     color: #fff;
   }
+
+  /* 💡 clearer placeholder text */
+  ::placeholder {
+    color: #e2e8f0; /* soft white-grey */
+    opacity: 1;
+    font-weight: 500;
+  }
+
   button {
     background: #6366f1;
     color: white;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.2s;
   }
   button:hover {
     background: #4f46e5;
   }
+
   .hidden { display: none; }
   .link {
     color: #a5b4fc;
@@ -58,6 +71,7 @@
     overflow-y: auto;
   }
 </style>
+
 </head>
 <body>
 
