@@ -1,238 +1,264 @@
-DOCTYPE html>
-<html lang="fr">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLEYZI Music</title>
-    <style>
-        /* ---- STYLE GLOBAL ---- */
-        body {
-            margin: 0;
-            font-family: "Poppins", Arial, sans-serif;
-            color: white;
-            background: url('https://images.unsplash.com/photo-1555617117-08a08819dc4b?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
-            background-size: cover;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalobox Messaging</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-        /* ---- OMBRE ET FOND ---- */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: -1;
-        }
+    .container {
+      background: #1b1b1b;
+      padding: 20px;
+      border-radius: 12px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 0 15px #00ff00;
+    }
 
-        header {
-            text-align: center;
-            padding: 50px 10px 30px;
-            border-bottom: 2px solid #ff3333;
-            animation: fadeInDown 1.5s ease;
-        }
+    input, textarea {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+      background: #333;
+      color: #00ff00;
+    }
 
-        header h1 {
-            font-size: 3em;
-            margin: 0;
-            color: #ff3333;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 15px #ff3333, 0 0 30px #ff0000;
-            animation: pulse 2s infinite alternate;
-        }
+    textarea {
+      height: 60px;
+      resize: none;
+    }
 
-        header p {
-            color: #ccc;
-            font-size: 1.2em;
-            margin-top: 10px;
-            animation: fadeIn 2s ease;
-        }
+    button {
+      background: #00ff00;
+      color: black;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 5px;
+    }
 
-        nav {
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 25px;
-            padding: 15px;
-            border-bottom: 1px solid #ff3333;
-            backdrop-filter: blur(5px);
-        }
+    button:hover {
+      background: #00cc00;
+    }
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1em;
-            transition: 0.3s;
-        }
+    /* Loading overlay */
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+    }
 
-        nav a:hover {
-            color: #ff3333;
-            transform: scale(1.1);
-        }
+    .loader {
+      border: 6px solid #333;
+      border-top: 6px solid #00ff00;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 10px #00ff00;
+    }
 
-        section {
-            padding: 60px 20px;
-            text-align: center;
-            animation: fadeIn 1.5s ease;
-        }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
 
-        section h2 {
-            color: #ff3333;
-            margin-bottom: 15px;
-            font-size: 2em;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px #ff0000;
-        }
-
-        p {
-            font-size: 1.1em;
-            color: #ddd;
-            max-width: 700px;
-            margin: auto;
-        }
-
-        /* ---- MUSIQUE ---- */
-        .music-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .music-card {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 12px;
-            width: 260px;
-            box-shadow: 0 0 15px #000;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .music-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px #ff3333;
-        }
-
-        .music-card h3 {
-            color: #ff3333;
-            font-size: 1.3em;
-            margin-bottom: 10px;
-        }
-
-        audio {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        footer {
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 25px;
-            color: #888;
-            border-top: 1px solid #ff3333;
-            margin-top: 50px;
-            backdrop-filter: blur(5px);
-        }
-
-        footer a {
-            color: #ff3333;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* ---- ANIMATIONS ---- */
-        @keyframes pulse {
-            0% { text-shadow: 0 0 10px #ff3333, 0 0 20px #ff0000; }
-            100% { text-shadow: 0 0 20px #ff6666, 0 0 40px #ff0000; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ---- RESPONSIVE ---- */
-        @media screen and (max-width: 768px) {
-            header h1 {
-                font-size: 2em;
-            }
-            .music-card {
-                width: 90%;
-            }
-        }
-    </style>
+    #loading-overlay p {
+      color: #00ff00;
+      margin-top: 15px;
+      font-size: 18px;
+      text-shadow: 0 0 10px #00ff00;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>💬 Kalobox Messaging</h2>
 
-    <header>
-        <h1>🔥 BLEYZI MUSIC 🔥</h1>
-        <p>Le son de ta vie, inspiré par Dieu et la réalité 🎤</p>
-    </header>
+    <div id="register-section">
+      <h3>Register</h3>
+      <input type="email" id="regEmail" placeholder="Email">
+      <input type="text" id="regName" placeholder="Name">
+      <input type="password" id="regPassword"placeholder="Enter password..."/>
+      <button onclick="registerUser()">Register</button>
+    </div>
 
-    <nav>
-        <a href="#accueil">Accueil</a>
-        <a href="#musiques">Musiques</a>
-        <a href="#contact">Contact</a>
-    </nav>
+    <div id="login-section">
+      <h3>Login</h3>
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword"placeholder="Enter password..."/>
 
-    <!-- SECTION ACCUEIL -->
-    <section id="accueil">
-        <h2>Bienvenue sur BLEYZI MUSIC</h2>
-        <p>Ici, c’est l’univers BLEYZI — un mélange de foi, d’école, de vérité et de son lourd.  
-        Chaque track raconte une étape de la vie, avec la bénédiction d’en haut 💫.</p>
-    </section>
+      <button onclick="loginUser()">Login</button>
+    </div>
 
-    <!-- SECTION MUSIQUES -->
-    <section id="musiques">
-        <h2>🎧 Mes Morceaux</h2>
-        <div class="music-container">
-            <div class="music-card">
-                <h3>Épreuve</h3>
-                <audio controls>
-                    <source src="musique1.mp3" type="audio/mpeg">
-                    Ton navigateur ne supporte pas la lecture audio.
-                </audio>
-            </div>
+    <div id="message-section" style="display:none;">
+      <h3>Send a Message</h3>
+      <input type="email" id="receiverEmail" placeholder="Receiver Email">
+      <textarea id="messageText" placeholder="Your message"></textarea>
+      <button onclick="sendMessage()">Send Message</button>
+      <!-- Add this new button inside the message-section (under "Send Message") -->
+<h4>All Users</h4>
+<button onclick="loadAllUsers()">📜 View All Users</button>
+<div id="usersList"></div>
 
-            <div class="music-card">
-                <h3>Foi et Force</h3>
-                <audio controls>
-                    <source src="musique2.mp3" type="audio/mpeg">
-                </audio>
-            </div>
 
-            <div class="music-card">
-                <h3>École de la Vie</h3>
-                <audio controls>
-                    <source src="musique3.mp3" type="audio/mpeg">
-                </audio>
-            </div>
-        </div>
-    </section>
+      <h4>Your Messages</h4>
+      <button onclick="loadMessages()">Show My Messages</button>
+      <div id="messages"></div><br><br>
+      <a href="index.html">log out</a>
+    </div>
+  </div>
 
-    <!-- SECTION CONTACT -->
-    <section id="contact">
-        <h2>📩 Contact</h2>
-        <p>Tu veux collaborer, partager un son ou m’envoyer un message ?  
-        Écris-moi à : <strong>bleyzi.music@gmail.com</strong></p>
-    </section>
+  <!-- Loading overlay -->
+  <div id="loading-overlay">
+    <div class="loader"></div>
+    <p>Please wait...</p>
+  </div>
 
-    <footer>
-        <p>&copy; 2025 BLEYZI Music. Tous droits réservés. | Fait avec ❤️ et passion.</p>
-    </footer>
+  <script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbyrr1aNym6jtXXDwUKNJDjvr7lOgdW_QszqZEIW5OmjEiesYT_7SsMJA5KlscWLEHE/exec"; // your script URL
+  let currentUserEmail = ""; // store logged-in user's email
+
+  function showLoading() {
+    document.getElementById("loading-overlay").style.display = "flex";
+  }
+
+  function hideLoading() {
+    document.getElementById("loading-overlay").style.display = "none";
+  }
+
+  function registerUser() {
+    showLoading();
+    const email = document.getElementById("regEmail").value;
+    const name = document.getElementById("regName").value;
+    const password = document.getElementById("regPassword").value;
+
+    fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({ action: "register", email, name, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+      hideLoading();
+      alert(data.message);
+    })
+    .catch(err => {
+      hideLoading();
+      alert("Error: " + err);
+    });
+  }
+
+  function loginUser() {
+    showLoading();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({ action: "login", email, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+      hideLoading();
+      if (data.success) {
+        currentUserEmail = data.email;
+        document.getElementById("register-section").style.display = "none";
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("message-section").style.display = "block";
+        alert("Login successful!");
+        loadMessages(); // ✅ automatically load messages after login
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(err => {
+      hideLoading();
+      alert("Error: " + err);
+    });
+  }
+
+  function sendMessage() {
+    showLoading();
+    const receiver = document.getElementById("receiverEmail").value;
+    const message = document.getElementById("messageText").value;
+
+    fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({ action: "sendMessage", sender: currentUserEmail, receiver, message })
+    })
+    .then(res => res.json())
+    .then(data => {
+      hideLoading();
+      alert(data.message);
+      document.getElementById("messageText").value = "";
+      loadMessages(); // ✅ auto-refresh messages after sending
+    })
+    .catch(err => {
+      hideLoading();
+      alert("Error: " + err);
+    });
+  }
+
+  function loadMessages() {
+    showLoading();
+    fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({ action: "getMessages", email: currentUserEmail })
+    })
+    .then(res => res.json())
+    .then(data => {
+      hideLoading();
+      const div = document.getElementById("messages");
+      div.innerHTML = "";
+
+      if (data.success && data.messages.length > 0) {
+        data.messages.forEach(msg => {
+          const msgBox = document.createElement("div");
+          msgBox.style.border = "1px solid #00ff00";
+          msgBox.style.borderRadius = "8px";
+          msgBox.style.padding = "8px";
+          msgBox.style.margin = "8px 0";
+          msgBox.style.background = "#111";
+          msgBox.innerHTML = `
+            <p><strong>📩 From:</strong> ${msg.sender}</p>
+            <p>${msg.text}</p>
+            <p style="font-size:12px; color:#999;">${msg.time}</p>
+          `;
+          div.appendChild(msgBox);
+        });
+      } else {
+        div.innerHTML = "<p>No messages yet.</p>";
+      }
+    })
+    .catch(err => {
+      hideLoading();
+      alert("Error loading messages: " + err);
+    });
+  }
+</script>
 
 </body>
 </html>
